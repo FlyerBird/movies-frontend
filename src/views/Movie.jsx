@@ -13,7 +13,7 @@ export default function Movie() {
       try {
         const response = await axios.get(`http://localhost:8000/api/v1/movies/${id}`)
         console.log(response);
-        //setProject(response.data.data)
+        setProject(response.data.data)
       } catch (error) {
         console.error(error);
       }
@@ -21,11 +21,36 @@ export default function Movie() {
     getData();
   }, [id]);
 
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8000/api/v1/movies/${id}`);
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div>
       <h2>Movie details</h2>
-      {/* Should be the detail of one movie  */}
-      {/* Should have a delete button to delete the movie and then redirect to the Home */}
+      {project && (
+        <div>
+          <h4>Movie: {project.title}</h4>
+          <p>
+            <img width="250px" src={project.image} alt={`Pic of ${project.title}`} />
+          </p>
+          <p>Year: {project.year}</p>
+          <p>Director: {project.director}</p>
+          <p>Synopsis: {project.synopsis}</p>
+          
+
+          <button onClick={handleDelete}>Delete movie</button>
+          <button onClick={() => navigate(`/edit/${id}`)}>Edit movie</button>
+          
+        </div>
+        )}
+      {!project && <p>Movie not found</p>}
+     
     </div>
   )
 }
